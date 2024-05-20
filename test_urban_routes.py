@@ -1,3 +1,4 @@
+
 import data
 from selenium import webdriver
 from metodos import UrbanRoutesPage
@@ -11,7 +12,8 @@ class TestUrbanRoutes:
 
     @classmethod
     def setup_class(cls):
-        # no lo modifiques, ya que necesitamos un registro adicional habilitado para recuperar el código de confirmación del teléfono
+        # no lo modifiques, ya que necesitamos un registro adicional habilitado para recuperar el código de
+        # confirmación del teléfono
         from selenium.webdriver import DesiredCapabilities
         capabilities = DesiredCapabilities.CHROME
         capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
@@ -32,6 +34,7 @@ class TestUrbanRoutes:
         routes_page = UrbanRoutesPage(self.driver)
         routes_page.set_comfort_tariff()
         WebDriverWait(self.driver, 5)
+        assert routes_page.check_comfort_is_set() == "Comfort"
 
     # 3. Añadir número de teléfono
     def test_add_phone_number(self):
@@ -65,6 +68,7 @@ class TestUrbanRoutes:
         routes_page = UrbanRoutesPage(self.driver)
         WebDriverWait(self.driver, 5).until(expected_conditions.element_to_be_clickable(routes_page.find_blanket_slider()))
         routes_page.set_on_blanket_slider()
+        assert routes_page.find_blanket_slider() is not None
 
     # 7. Ordenar dos helados de chocolate.
     def test_order_ice_cream(self):
@@ -82,13 +86,13 @@ class TestUrbanRoutes:
     # 10. Desplegar en el modal, la informacion de viaje  al finalizar el temporizador.
     def test_show_order_info(self):
         routes_page = UrbanRoutesPage(self.driver)
-        WebDriverWait(self.driver, 40).until(expected_conditions.visibility_of_element_located(routes_page.ask_taxi.order_details_button))
+        WebDriverWait(self.driver, 40).until(expected_conditions.visibility_of_element_located(routes_page.order_details_button))
         routes_page.show_order_details()
-        WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(routes_page.ask_taxi.point_a))
-        WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(routes_page.ask_taxi.point_b))
+        WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(routes_page.point_a))
+        WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(routes_page.point_b))
         assert routes_page.get_point_a_text() == data.address_from
         assert routes_page.get_point_b_text() == data.address_to
-        WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(routes_page.ask_taxi.drivers_name))
+        WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(routes_page.drivers_name))
         drivers_name = routes_page.get_drivers_name()
         assert drivers_name is not None
 
